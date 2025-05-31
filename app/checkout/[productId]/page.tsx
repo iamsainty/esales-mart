@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus, Star } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { JSX, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -63,7 +63,9 @@ export default function Checkout(): JSX.Element {
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
   const [cvv, setCvv] = useState<number | undefined>(undefined);
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -86,54 +88,83 @@ export default function Checkout(): JSX.Element {
     return emailRegex.test(email);
   };
 
-  const handlePlaceOrder = () => {
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !address ||
-      !city ||
-      !state ||
-      !zip ||
-      !cardNumber ||
-      !expiryDate ||
-      !cvv
-    ) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+  const handlePlaceOrder = async () => {
+    try {
+      if (
+        !name ||
+        !email ||
+        !phone ||
+        !address ||
+        !city ||
+        !state ||
+        !zip ||
+        !cardNumber ||
+        !expiryDate ||
+        !cvv
+      ) {
+        toast.error("Please fill in all fields");
+        return;
+      }
 
-    if (!validateEmail(email)) {
-      toast.error("Invalid email address");
-      return;
-    }
+      if (!validateEmail(email)) {
+        toast.error("Invalid email address");
+        return;
+      }
 
-    if (phone.toString().length !== 10) {
-      toast.error("Enter a valid 10 digit phone number");
-      return;
-    }
+      if (phone.toString().length !== 10) {
+        toast.error("Enter a valid 10 digit phone number");
+        return;
+      }
 
-    if (quantity > product.stock) {
-      toast.error("Quantity is not available");
-      return;
-    }
+      if (quantity > product.stock) {
+        toast.error("Quantity is not available");
+        return;
+      }
 
-    if (cardNumber.toString().length !== 16) {
-      toast.error("Enter a valid card 16 digit number");
-      return;
-    }
+      if (cardNumber.toString().length !== 16) {
+        toast.error("Enter a valid card 16 digit number");
+        return;
+      }
 
-    if (cvv.toString().length !== 3) {
-      toast.error("Enter a valid 3 digit CVV number");
-      return;
-    }
+      if (cvv.toString().length !== 3) {
+        toast.error("Enter a valid 3 digit CVV number");
+        return;
+      }
 
-    if (expiryDate < new Date()) {
-      toast.error("Enter a valid expiry date");
-      return;
-    }
+      if (expiryDate < new Date()) {
+        toast.error("Enter a valid expiry date");
+        return;
+      }
 
-    toast.success("Order placed successfully");
+      const response = await fetch("/api/sendOrderEmail", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          product,
+          quantity,
+          totalPrice: product.price * quantity,
+        }),
+      });
+
+      if (!response.ok) {
+        toast.error("Failed to send email");
+        return;
+      }
+
+      localStorage.setItem("name", name);
+      localStorage.setItem("purchaseSuccess", "true");
+      localStorage.setItem("productId", product.id.toString());
+      localStorage.setItem("quantity", quantity.toString());
+      localStorage.setItem("totalPrice", (product.price * quantity).toString());
+
+      router.push("/thank-you");
+
+      toast.success("Order placed successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    }
   };
 
   return (
@@ -305,7 +336,9 @@ export default function Checkout(): JSX.Element {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setQuantity(quantity - 1)}
+                onClick={() => {
+                  setQuantity(quantity - 1);
+                }}
                 disabled={quantity === 1}
                 className="w-8 h-8"
               >
@@ -315,7 +348,9 @@ export default function Checkout(): JSX.Element {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setQuantity(quantity + 1)}
+                onClick={() => {
+                  setQuantity(quantity + 1);
+                }}
                 disabled={quantity === product.stock}
                 className="w-8 h-8"
               >
@@ -328,7 +363,7 @@ export default function Checkout(): JSX.Element {
           <div className="pt-2 text-sm">
             <span className="font-medium">Total Amount:</span>{" "}
             <span className="text-base font-semibold">
-              ${Number(product.price * quantity).toFixed(2)}
+              $ {(product.price * quantity).toFixed(2)}
             </span>
           </div>
         </div>

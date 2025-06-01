@@ -39,7 +39,7 @@ export default function ThankYou(): JSX.Element {
     setCity(localStorage.getItem("city") || "");
     setState(localStorage.getItem("state") || "");
     setZip(localStorage.getItem("zip") || "");
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (!productId) return;

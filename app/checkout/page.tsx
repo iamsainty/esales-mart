@@ -8,7 +8,7 @@ export default function Checkout() {
 
   useEffect(() => {
     router.push("/");
-  }, []);
+  }, [router]);
 
   return null;
 }

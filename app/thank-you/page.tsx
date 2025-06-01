@@ -6,6 +6,7 @@ import { JSX, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ThankYou(): JSX.Element {
   const [name, setName] = useState<string>("");
@@ -60,7 +61,53 @@ export default function ThankYou(): JSX.Element {
 
   if (!product) {
     return (
-      <div className="text-center py-10 text-muted-foreground">Loading...</div>
+      <div className="container mx-auto py-12 max-w-5xl space-y-10">
+        {/* Back Button */}
+        <div>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 border border-black/50 rounded-none px-3 py-1 text-sm"
+            disabled
+          >
+            ← Back to Home
+          </Button>
+        </div>
+
+        {/* Thank You Header */}
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-5 w-80" />
+        </div>
+
+        {/* Order Summary */}
+        <div>
+          <Skeleton className="h-8 w-48 mb-6" />
+          <div className="flex flex-col md:flex-row gap-10">
+            <Skeleton className="relative w-full md:w-40 h-40 rounded-lg" />
+            <div className="flex-1 space-y-4">
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-44" />
+              </div>
+            </div>
+          </div>
+
+          {/* Shipping Info */}
+          <div className="mt-10">
+            <Skeleton className="h-8 w-60 mb-6" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-56" />
+              <Skeleton className="h-4 w-64" />
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-4 w-80" />
+              <Skeleton className="h-4 w-52" />
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 

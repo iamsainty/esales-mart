@@ -13,6 +13,8 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import { Product } from "@/types/Product";
+import { FiShoppingCart } from "react-icons/fi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Home(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,6 +31,48 @@ export default function Home(): JSX.Element {
     };
     getProducts();
   }, []);
+
+  if (products.length === 0) {
+    return (
+      <div className="container mx-auto p-6 max-w-6xl">
+        <header className="my-20 text-center">
+          <Skeleton className="h-8 w-40 mx-auto mb-2" />
+          <Skeleton className="h-5 w-96 mx-auto" />
+        </header>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="border rounded-none overflow-hidden hover:shadow-lg transition-shadow duration-300"
+            >
+              <Skeleton className="relative h-40 w-full rounded-none" />
+
+              <div className="p-4 space-y-3">
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-1/2" />
+
+                <div className="flex items-center gap-2">
+                  <Skeleton className="w-4 h-4 rounded-full" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-5 w-12" />
+                  <Skeleton className="h-5 w-20" />
+                </div>
+              </div>
+
+              <div className="px-4 pb-4">
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
@@ -84,6 +128,7 @@ export default function Home(): JSX.Element {
             <CardFooter>
               <Link href={`/checkout/${product.id}`} className="w-full mt-2">
                 <Button className="w-full rounded-none cursor-pointer">
+                  <FiShoppingCart className="w-4 h-4" />
                   Buy Now
                 </Button>
               </Link>

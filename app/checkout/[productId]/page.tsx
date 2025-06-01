@@ -8,46 +8,10 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { JSX, useEffect, useState } from "react";
 import { toast } from "sonner";
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  tags: string[];
-  brand: string;
-  sku: string;
-  weight: number;
-  dimensions: {
-    width: number;
-    height: number;
-    depth: number;
-  };
-  warrantyInformation: string;
-  shippingInformation: string;
-  availabilityStatus: string;
-  reviews: {
-    rating: number;
-    comment: string;
-    date: string;
-    reviewerName: string;
-    reviewerEmail: string;
-  }[];
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  meta: {
-    createdAt: string;
-    updatedAt: string;
-    barcode: string;
-    qrCode: string;
-  };
-  images: string[];
-  thumbnail: string;
-}
+import { FiShoppingCart } from "react-icons/fi";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Product } from "@/types/Product";
+import { RiLoader4Line } from "react-icons/ri";
 
 export default function Checkout(): JSX.Element {
   const { productId } = useParams();
@@ -66,6 +30,8 @@ export default function Checkout(): JSX.Element {
 
   const [quantity, setQuantity] = useState<number>(1);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -83,10 +49,107 @@ export default function Checkout(): JSX.Element {
     fetchProduct();
   }, [productId]);
 
-  if (!product)
+  if (!product) {
     return (
-      <div className="text-center py-20 text-lg font-medium">Loading...</div>
+      <div className="container mx-auto py-12 max-w-5xl space-y-10">
+        {/* Back Button */}
+        <div>
+          <Skeleton className="w-32 h-8 rounded-none" />
+        </div>
+
+        {/* Title */}
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-5 w-64" />
+        </div>
+
+        {/* Order Summary */}
+        <section className="space-y-6">
+          <Skeleton className="h-8 w-40" />
+          <div className="flex flex-col md:flex-row gap-6 items-start">
+            <Skeleton className="w-full md:w-80 h-72" />
+            <div className="flex-1 space-y-3">
+              <Skeleton className="h-8 w-60" />
+              <Skeleton className="h-4 w-72" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-4 w-32" />
+              <div className="flex gap-2 flex-wrap pt-2">
+                {[...Array(4)].map((_, i) => (
+                  <Skeleton key={i} className="h-5 w-12" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Shipping & Payment */}
+        <section className="space-y-6">
+          <Skeleton className="h-8 w-72" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[...Array(7)].map((_, i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
+          </div>
+
+          <div className="space-y-4 pt-6 max-w-md">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-64" />
+            <Skeleton className="h-10 w-full" />
+            <div className="flex gap-2">
+              <Skeleton className="h-10 w-1/2" />
+              <Skeleton className="h-10 w-1/2" />
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-6 max-w-md">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-64" />
+
+            <div className="flex items-center gap-2">
+              <Skeleton className="w-8 h-8" />
+              <Skeleton className="w-12 h-6" />
+              <Skeleton className="w-8 h-8" />
+            </div>
+
+            <Skeleton className="h-5 w-40" />
+          </div>
+
+          <div className="pt-6 max-w-md">
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </section>
+
+        {/* Info + Reviews */}
+        <section className="grid md:grid-cols-2 gap-6">
+          <div className="bg-muted p-5 space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i}>
+                <Skeleton className="h-6 w-32" />
+                <Skeleton className="h-4 w-full mt-1" />
+              </div>
+            ))}
+          </div>
+          <div className="bg-muted p-5 space-y-3">
+            <Skeleton className="h-6 w-40" />
+            <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="space-y-1 border-b pb-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
     );
+  }
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -95,6 +158,7 @@ export default function Checkout(): JSX.Element {
 
   const handlePlaceOrder = async () => {
     try {
+      setIsLoading(true);
       if (
         !name ||
         !email ||
@@ -108,36 +172,43 @@ export default function Checkout(): JSX.Element {
         !cvv
       ) {
         toast.error("Please fill in all fields");
+        setIsLoading(false);
         return;
       }
 
       if (!validateEmail(email)) {
         toast.error("Invalid email address");
+        setIsLoading(false);
         return;
       }
 
       if (phone.toString().length !== 10) {
         toast.error("Enter a valid 10 digit phone number");
+        setIsLoading(false);
         return;
       }
 
       if (quantity > product.stock) {
         toast.error("Quantity is not available");
+        setIsLoading(false);
         return;
       }
 
       if (cardNumber.toString().length !== 16) {
         toast.error("Enter a valid card 16 digit number");
+        setIsLoading(false);
         return;
       }
 
       if (cvv.toString().length !== 3) {
         toast.error("Enter a valid 3 digit CVV number");
+        setIsLoading(false);
         return;
       }
 
       if (expiryDate < new Date()) {
         toast.error("Enter a valid expiry date");
+        setIsLoading(false);
         return;
       }
 
@@ -154,6 +225,7 @@ export default function Checkout(): JSX.Element {
 
       if (!response.ok) {
         toast.error("Failed to send email");
+        setIsLoading(false);
         return;
       }
 
@@ -172,9 +244,11 @@ export default function Checkout(): JSX.Element {
       router.push("/thank-you");
 
       toast.success("Order placed successfully");
+      setIsLoading(false);
     } catch (error) {
       toast.error("Something went wrong");
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -392,9 +466,15 @@ export default function Checkout(): JSX.Element {
 
         <div className="pt-6 max-w-md">
           <Button
-            className="w-full py-2.5 text-base rounded-none font-semibold"
+            className="w-full py-2.5 text-base rounded-none font-semibold cursor-pointer flex items-center justify-center gap-2"
             onClick={handlePlaceOrder}
+            disabled={isLoading}
           >
+            {isLoading ? (
+              <RiLoader4Line className="w-4 h-4 animate-spin" />
+            ) : (
+              <FiShoppingCart className="w-4 h-4" />
+            )}
             Place Order
           </Button>
         </div>

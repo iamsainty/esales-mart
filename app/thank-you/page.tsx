@@ -4,6 +4,8 @@ import { Product } from "@/types/Product";
 import Image from "next/image";
 import { JSX, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function ThankYou(): JSX.Element {
   const [name, setName] = useState<string>("");
@@ -63,10 +65,21 @@ export default function ThankYou(): JSX.Element {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="my-8">
-        <h1 className="text-4xl font-bold">Thank You!</h1>
-        <p className="text-muted-foreground text-base sm:text-lg">
+    <div className="container mx-auto py-12 max-w-5xl space-y-10">
+      <div>
+        <Link href="/">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 border border-black/50 rounded-none cursor-pointer px-3 py-1 text-sm"
+          >
+            ← Back to Home
+          </Button>
+        </Link>
+      </div>
+
+      <div className="space-y-1">
+        <h1 className="text-4xl font-semibold tracking-tight">Thank You!</h1>
+        <p className="text-muted-foreground text-base">
           We appreciate your purchase. Your order is confirmed and being
           processed.
         </p>
@@ -74,8 +87,8 @@ export default function ThankYou(): JSX.Element {
 
       <div>
         <h2 className="text-2xl font-semibold my-6">Order Summary</h2>
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="relative w-full md:w-60 h-60 rounded-lg overflow-hidden">
+        <div className="flex flex-col md:flex-row gap-10">
+          <div className="relative w-full md:w-40 h-40 rounded-lg overflow-hidden">
             <Image
               src={product.thumbnail}
               alt={product.title}
@@ -111,7 +124,6 @@ export default function ThankYou(): JSX.Element {
           </div>
         </div>
 
-        {/* Shipping Information */}
         <div className="mt-10">
           <h2 className="text-2xl font-semibold my-6">Shipping Information</h2>
           <div className="text-sm text-muted-foreground leading-relaxed">

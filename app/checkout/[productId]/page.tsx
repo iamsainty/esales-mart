@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus, Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { JSX, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -66,6 +67,10 @@ export default function Checkout(): JSX.Element {
   const [quantity, setQuantity] = useState<number>(1);
 
   const router = useRouter();
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -174,11 +179,22 @@ export default function Checkout(): JSX.Element {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl space-y-12">
+    <div className="container mx-auto py-12 max-w-5xl space-y-10">
+      <div>
+        <Link href="/">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 border border-black/50 rounded-none cursor-pointer px-3 py-1 text-sm"
+          >
+            ← Back to Home
+          </Button>
+        </Link>
+      </div>
+
       {/* Title */}
-      <div className="my-20">
-        <h1 className="text-3xl font-bold tracking-tight">Checkout</h1>
-        <p className="text-muted-foreground text-sm">
+      <div className="space-y-1">
+        <h1 className="text-4xl font-semibold tracking-tight">Checkout</h1>
+        <p className="text-muted-foreground text-base">
           Complete your purchase below
         </p>
       </div>
@@ -336,9 +352,9 @@ export default function Checkout(): JSX.Element {
           </div>
 
           {/* Quantity Selector */}
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             <label className="text-sm font-medium">Select Quantity</label>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="icon"
@@ -346,7 +362,7 @@ export default function Checkout(): JSX.Element {
                   setQuantity(quantity - 1);
                 }}
                 disabled={quantity === 1}
-                className="w-8 h-8"
+                className="w-8 h-8 border border-black/50 rounded-none"
               >
                 <Minus className="w-4 h-4" />
               </Button>
@@ -358,7 +374,7 @@ export default function Checkout(): JSX.Element {
                   setQuantity(quantity + 1);
                 }}
                 disabled={quantity === product.stock}
-                className="w-8 h-8"
+                className="w-8 h-8 border border-black/50 rounded-none"
               >
                 <Plus className="w-4 h-4" />
               </Button>

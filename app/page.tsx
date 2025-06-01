@@ -12,49 +12,14 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import Link from "next/link";
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  tags: string[];
-  brand: string;
-  sku: string;
-  weight: number;
-  dimensions: {
-    width: number;
-    height: number;
-    depth: number;
-  };
-  warrantyInformation: string;
-  shippingInformation: string;
-  availabilityStatus: string;
-  reviews: {
-    rating: number;
-    comment: string;
-    date: string;
-    reviewerName: string;
-    reviewerEmail: string;
-  }[];
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  meta: {
-    createdAt: string;
-    updatedAt: string;
-    barcode: string;
-    qrCode: string;
-  };
-  images: string[];
-  thumbnail: string;
-}
+import { Product } from "@/types/Product";
 
 export default function Home(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -67,12 +32,9 @@ export default function Home(): JSX.Element {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      {/* Heading Section */}
-      <header className="my-12 text-center">
-        <h1 className="text-4xl font-extrabold mb-2 text-gray-900">
-          Welcome to E-Sales Mart
-        </h1>
-        <p className="text-lg text-gray-600 max-w-xl mx-auto">
+      <header className="my-20 text-center">
+        <h1 className="text-4xl font-bold mb-2">E-Sales Mart</h1>
+        <p className="text-lg text-muted-foreground max-w-xl mx-auto">
           Discover our exclusive collection of products curated just for you.
         </p>
       </header>
@@ -112,7 +74,7 @@ export default function Home(): JSX.Element {
               <div className="flex items-center justify-between text-base font-bold">
                 <span>${product.price}</span>
                 {product.discountPercentage > 0 && (
-                  <span className="text-sm font-semibold text-green-600 bg-green-100 px-2 py-0.5 rounded-md">
+                  <span className="text-sm font-semibold bg-muted px-2 py-0.5 rounded-md">
                     -{Math.round(product.discountPercentage)}% OFF
                   </span>
                 )}

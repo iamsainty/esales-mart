@@ -153,6 +153,12 @@ export default function Checkout(): JSX.Element {
       }
 
       localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
+      localStorage.setItem("phone", phone.toString());
+      localStorage.setItem("address", address);
+      localStorage.setItem("city", city);
+      localStorage.setItem("state", state);
+      localStorage.setItem("zip", zip.toString());
       localStorage.setItem("purchaseSuccess", "true");
       localStorage.setItem("productId", product.id.toString());
       localStorage.setItem("quantity", quantity.toString());

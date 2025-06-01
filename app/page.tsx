@@ -75,7 +75,7 @@ export default function Home(): JSX.Element {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="container mx-auto py-12 px-6 max-w-5xl space-y-10">
       <header className="my-20 text-center">
         <h1 className="text-4xl font-bold mb-2">E-Sales Mart</h1>
         <p className="text-lg text-muted-foreground max-w-xl mx-auto">

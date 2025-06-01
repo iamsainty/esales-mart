@@ -51,7 +51,7 @@ export default function Checkout(): JSX.Element {
 
   if (!product) {
     return (
-      <div className="container mx-auto py-12 max-w-5xl space-y-10">
+      <div className="container mx-auto py-12 px-6 max-w-5xl space-y-10">
         {/* Back Button */}
         <div>
           <Skeleton className="w-32 h-8 rounded-none" />
@@ -253,7 +253,7 @@ export default function Checkout(): JSX.Element {
   };
 
   return (
-    <div className="container mx-auto py-12 max-w-5xl space-y-10">
+    <div className="container mx-auto py-12 px-6 max-w-5xl space-y-10">
       <div>
         <Link href="/">
           <Button

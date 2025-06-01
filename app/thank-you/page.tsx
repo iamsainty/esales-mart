@@ -61,7 +61,7 @@ export default function ThankYou(): JSX.Element {
 
   if (!product) {
     return (
-      <div className="container mx-auto py-12 max-w-5xl space-y-10">
+      <div className="container mx-auto py-12 px-6 max-w-5xl space-y-10">
         {/* Back Button */}
         <div>
           <Button
@@ -112,7 +112,7 @@ export default function ThankYou(): JSX.Element {
   }
 
   return (
-    <div className="container mx-auto py-12 max-w-5xl space-y-10">
+    <div className="container mx-auto py-12 px-6 max-w-5xl space-y-10">
       <div>
         <Link href="/">
           <Button
